@@ -1,15 +1,15 @@
 import { Box, Button, Typography, TextField } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "./redux/store";
 
 function Login() {
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
-
   const [error, setError] = useState(false);
-
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   function handleEmail(e: React.ChangeEvent<HTMLInputElement>) {
     setEmail(e.target.value);
@@ -17,9 +17,10 @@ function Login() {
   function handlePassword(e: React.ChangeEvent<HTMLInputElement>) {
     setPassword(e.target.value);
   }
-  function handleSubmit(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (email === "admin" && password === "123") {
+      dispatch(login());
       navigate("/home");
     } else {
       setError(true);
@@ -28,6 +29,8 @@ function Login() {
 
   return (
     <Box
+      component="form"
+      onSubmit={handleSubmit}
       sx={{
         display: "flex",
         justifyContent: "center",
@@ -40,17 +43,15 @@ function Login() {
       }}
     >
       <Typography sx={{ padding: "30px" }}> Login </Typography>
-
       <TextField
         sx={{ padding: "10px" }}
         id="outlined-email-input"
         label="Email"
-        type="email"
+        type="text"
         autoComplete="current-email"
         value={email}
         onChange={handleEmail}
       />
-
       <TextField
         id="outlined-password-input"
         label="Password"
@@ -59,13 +60,13 @@ function Login() {
         value={password}
         onChange={handlePassword}
       />
-      <Button onClick={handleSubmit} variant="contained">
+      <Button type="submit" variant="contained">
         {" "}
         Đăng Nhập{" "}
-      </Button>
+      </Button>{" "}
+      {}
       {error && (
         <Typography sx={{ padding: "30px", color: "pink" }}>
-          {" "}
           Sai pass hoac email
         </Typography>
       )}
